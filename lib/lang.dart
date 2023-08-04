@@ -45,7 +45,17 @@ class Lang extends Translations {
       "sensedTemperature":"Sensed Temperature",
       "enter_city":"Enter city...",
       "logout":"Log out",
-      "no_data":"No data"
+      "no_data":"No data",
+      "incorrect_email_account":"Incorrect email account",
+      "wrong_password":"Wrong Password",
+      "user_not_found":"User not found",
+      "fill_in_the_blanks":"Fill in the blanks",
+      "signed_in":"Signed in",
+      "passwords_must_be_the_same":"Passwords must be the same",
+      "check_the_boxes_to_move_forward":"Check the boxes to move forward",
+      "identifier":"Identifier number must be at least 11 digits",
+      "user_registered":"User registered",
+      "logged_out":"Logged out"
     },
     'tr_TR': {
       "phone":"Telefon",
@@ -80,7 +90,17 @@ class Lang extends Translations {
       "sensedTemperature":"Hissedilen Sıcaklık",
       "enter_city":"Şehir girin...",
       "logout":"Çıkış yap",
-      "no_data":"Veri yok"
+      "no_data":"Veri yok",
+      "incorrect_email_account":"Hatalı mail hesabı",
+      "wrong_password":"Yanlış şifre",
+      "user_not_found":"Kullanıcı bulunamadı",
+      "fill_in_the_blanks":"Boş alanları doldurunuz",
+      "signed_in":"Giriş yapıldı",
+      "passwords_must_be_the_same":"Şifreler aynı olmalı",
+      "check_the_boxes_to_move_forward":"İlerlemek için kutucukları işaretleyiniz",
+      "identifier":"Vatandaşlık numarası en az 11 hane olmalıdır",
+      "user_registered":"Kullanıcı kayıt edildi",
+      "logged_out":"Çıkış yapıldı"
     }
   };
 

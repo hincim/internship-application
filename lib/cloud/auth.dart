@@ -13,7 +13,7 @@ class AuthService{
     return user.user;
   }
 
-  signOut() async{
+  Future <void> signOut() async{
 
     return await _auth.signOut();
   }

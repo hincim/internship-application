@@ -21,17 +21,10 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   late AnimationController _alphaController;
   late Animation<double> _alphaAnimationValues;
 
-  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   void initState() {
     // TODO: implement initState
-    _auth.authStateChanges().listen((event) {
-      if(event != null){
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomePage(),));
-        return;
-      }
-    });
     super.initState();
     Future.delayed(Duration(milliseconds: 3000),(){
      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>

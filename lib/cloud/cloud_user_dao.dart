@@ -1,6 +1,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+/*
 class CloudUserDao{
 
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
@@ -11,4 +12,4 @@ class CloudUserDao{
     print("object");
     return ref;
   }
-}
+}*/

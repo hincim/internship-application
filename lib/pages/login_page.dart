@@ -28,6 +28,19 @@ class _LoginPageState extends State<LoginPage> {
   final _wholeModel = WholeModel();
 
   final AuthService _authService = AuthService();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _auth.authStateChanges().listen((event) {
+      if(event != null){
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>  HomePage()));
+        return;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -116,36 +129,37 @@ class _LoginPageState extends State<LoginPage> {
                           child: Padding(
                             padding: EdgeInsets.all(h / 100),
                             child: ElevatedButton(
-                                onPressed: () {
+                                onPressed: ()  {
                                   _wholeModel.refresh(true);
                                   if (_email.text == "" ||
                                       _password.text == "" ||
                                       _password.text.length < 6) {
                                     _wholeModel.refresh(false);
-                                    showToast("Boş alanları doldurunuz");
+                                    showToast("fill_in_the_blanks".tr);
                                   } else {
                                     _authService
                                         .signIn(_email.text.trim(), _password.text)
                                         .then((value) {
-                                      print(value);
-                                      print("fdfdfdfd"+value.toString());
-                                      return Navigator.push(
+                                      showToast("signed_in".tr);
+                                      return Navigator.pushReplacement(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) => HomePage())).then((value){
+                                              builder: (context) => HomePage(user: value,))).then((value){
+                                        _email.text="";
+                                        _password.text = "";
                                         _wholeModel.refresh(false);
                                       });
                                     }).catchError((dynamic error) {
                                       _wholeModel.refresh(false);
                                       switch (error.code) {
                                         case "invalid-email":
-                                          showToast("Hatalı email hesabı");
+                                          showToast("incorrect_email_account".tr);
                                           break;
                                         case "wrong-password":
-                                          showToast("Yanlış şifre.");
+                                          showToast("wrong_password".tr);
                                           break;
                                         case "user-not-found":
-                                          showToast("Kullanıcı bulunamadı");
+                                          showToast("user_not_found".tr);
                                           break;
                                         default:
                                           break;

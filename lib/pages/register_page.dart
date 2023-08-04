@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutterstaj/database/dao.dart';
 import 'package:flutterstaj/mobx/whole_model.dart';
 import 'package:flutterstaj/utils/practical_method.dart';
 import 'package:get/get.dart';
 
 import '../cloud/auth.dart';
+import '../database/model/local_user.dart';
 import '../global_widget/toast.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -41,7 +43,6 @@ class _RegisterPageState extends State<RegisterPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(_registerModel.checkBoxOne.toString()),
                   Padding(
                     padding: EdgeInsets.only(bottom: h/100,top: h/25),
                     child: SizedBox(
@@ -180,17 +181,21 @@ class _RegisterPageState extends State<RegisterPage> {
                     child: Padding(
                       padding: EdgeInsets.all(h/80),
                       child: ElevatedButton(
-                          onPressed: ()  {
+                          onPressed: ()   {
                             if(_password.text != _passwordAgain.text){
-                              showToast("Şifreler aynı olmalı");
+                              showToast("passwords_must_be_the_same".tr);
                             }else if(_registerModel.checkBoxOne == false || _registerModel.checkBoxTwo == false){
-                              showToast("İlerlemek için kutucukları işaretleyiniz");
+                              showToast("check_the_boxes_to_move_forward".tr);
                             }else if(_identificationNumber.text.length<11){
-                              showToast("Vatandaşlık numarası en az 11 hane olmalıdır");
+                              showToast("identifier".tr);
                             }else if(_identificationNumber.text.isEmpty || _email.text.isEmpty || _phone.text.isEmpty || _password.text.isEmpty || _passwordAgain.text.isEmpty){
-                              showToast("Boş olan yerleri doldurunuz");
+                              showToast("fill_in_the_blanks".tr);
                             }else{
-                              _authService.createPerson(int.parse(_identificationNumber.text), _email.text, int.parse(_phone.text), _password.text);
+                              _authService.createPerson(int.parse(_identificationNumber.text), _email.text, int.parse(_phone.text), _password.text).then((value){
+                                showToast("user_registered".tr);
+                                return Navigator.pop(context);
+                              });
+                              save();
                             }
                           },
                           style: ElevatedButton.styleFrom(
@@ -234,5 +239,10 @@ class _RegisterPageState extends State<RegisterPage> {
         );
       }),
     );
+  }
+
+  void save() async{
+    LocalUsers user = await DB.instance.insertUser(LocalUsers(id: int.parse(_identificationNumber.text),
+    phone: int.parse(_phone.text),email: _email.text));
   }
 }
