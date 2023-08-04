@@ -39,7 +39,12 @@ dependencies:
   flutter_mobx:
   mobx_codegen:
   package_info_plus: ^3.0.3
-
+  get: ^4.6.1
+  get_storage: ^2.1.1
+  lottie: ^2.5.0
+  firebase_auth: ^4.6.1
+  firebase_core: ^2.13.0
+  cloud_firestore: ^4.7.1
 
 
 
@@ -73,7 +78,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
-  #   - images/a_dot_ham.jpeg
+    - assets/animations/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

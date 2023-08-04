@@ -1,149 +1,257 @@
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterstaj/cubit/mark_cubit.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutterstaj/mobx/whole_model.dart';
 import 'package:flutterstaj/pages/home_page.dart';
 import 'package:flutterstaj/pages/register_page.dart';
 import 'package:flutterstaj/utils/practical_method.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
-class MainPage extends StatefulWidget {
-  const MainPage({Key? key}) : super(key: key);
+import '../cloud/auth.dart';
+import '../global_widget/toast.dart';
+
+class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
-  State<MainPage> createState() => _MainPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _MainPageState extends State<MainPage> {
-
-  final _citizenshipNumber = TextEditingController();
+class _LoginPageState extends State<LoginPage> {
+  final _email = TextEditingController();
   final _password = TextEditingController();
+
+  GetStorage box = GetStorage();
+
+  final _wholeModel = WholeModel();
+
+  final AuthService _authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
-
     MediaQueryData screen = MediaQuery.of(context);
     double w = screen.size.width;
     double h = screen.size.height;
-
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
-        child: SingleChildScrollView(
-          child: BlocBuilder<MarkCubit,bool>(builder: (context, state){
-          return Column(
-            children: [
-          Padding(
-            padding: EdgeInsets.only(bottom: h/20),
-            child: SizedBox(
-                width: w/1.2,
-                child: Image.asset("assets/images/logo.jpeg")),
-          ),
-          Padding(
-            padding: EdgeInsets.only(right:h/30,
-                left: h/30,top: h/30,bottom: h/50),
-            child: TextField(
-              controller: _citizenshipNumber,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: "Vatandaşlık No",
-                filled: true,
-                fillColor: Colors.white,
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10.0))
-                ),
-              ),
+    return Observer(builder: (_){
+      return Scaffold(
+          backgroundColor: Colors.white,
+          body:_wholeModel.refreshState? Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SpinKitFadingCircle(
+              color: Colors.red,
+              size: h/15,
+              duration: Duration(milliseconds: 1200),
             ),
+          ):Center(
+            child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                   Padding(
+                     padding: EdgeInsets.only(bottom: h / 20),
+                     child: SizedBox(
+                         width: w / 1.2,
+                         child: Image.asset("assets/images/logo.jpeg")),
+                   ),Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(
+                              right: h / 30, left: h / 30, top: h / 30, bottom: h / 50),
+                          child: TextField(
+                            controller: _email,
+                            keyboardType: TextInputType.emailAddress,
+                            decoration: InputDecoration(
+                              labelText: "Email",
+                              filled: true,
+                              fillColor: Colors.white,
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                              right: h / 30, left: h / 30, bottom: h / 50),
+                          child: Observer(builder: (_) {
+                            return TextField(
+                              obscureText: _wholeModel.iconState,
+                              controller: _password,
+                              keyboardType: TextInputType.text,
+                              decoration: InputDecoration(
+                                  labelText: "psw".tr,
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                  border: OutlineInputBorder(
+                                      borderRadius:
+                                      BorderRadius.all(Radius.circular(10.0))),
+                                  suffixIcon: IconButton(
+                                      onPressed: () {
+                                        _wholeModel.iconStateChanged();
+                                      },
+                                      icon: Icon(Icons.remove_red_eye_outlined,
+                                          color: _wholeModel.iconState
+                                              ? Colors.black
+                                              : Colors.red))),
+                            );
+                          }),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(h / 50),
+                          child: GestureDetector(
+                            onTap: () {},
+                            child: Text(
+                              "psw_forgot".tr,
+                              style: TextStyle(
+                                color: Color(
+                                    PracticalMethod.HexaColorConvertColor("#bd2524")),
+                                fontSize: w / 25,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: h / 12,
+                          width: w / 2,
+                          child: Padding(
+                            padding: EdgeInsets.all(h / 100),
+                            child: ElevatedButton(
+                                onPressed: () {
+                                  _wholeModel.refresh(true);
+                                  if (_email.text == "" ||
+                                      _password.text == "" ||
+                                      _password.text.length < 6) {
+                                    _wholeModel.refresh(false);
+                                    showToast("Boş alanları doldurunuz");
+                                  } else {
+                                    _authService
+                                        .signIn(_email.text.trim(), _password.text)
+                                        .then((value) {
+                                      print(value);
+                                      print("fdfdfdfd"+value.toString());
+                                      return Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => HomePage())).then((value){
+                                        _wholeModel.refresh(false);
+                                      });
+                                    }).catchError((dynamic error) {
+                                      _wholeModel.refresh(false);
+                                      switch (error.code) {
+                                        case "invalid-email":
+                                          showToast("Hatalı email hesabı");
+                                          break;
+                                        case "wrong-password":
+                                          showToast("Yanlış şifre.");
+                                          break;
+                                        case "user-not-found":
+                                          showToast("Kullanıcı bulunamadı");
+                                          break;
+                                        default:
+                                          break;
+                                      }
+                                    });
+                                  }
+                                },
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: Color(
+                                        PracticalMethod.HexaColorConvertColor(
+                                            "#bd2524"))),
+                                child: Text(
+                                  "login".tr,
+                                  style: TextStyle(fontSize: h / 35),
+                                )),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "not_registered".tr,
+                                style: TextStyle(
+                                  fontSize: w / 25,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              GestureDetector(
+                                child: Text(
+                                  "sign_up".tr,
+                                  style: TextStyle(
+                                    color: Color(
+                                        PracticalMethod.HexaColorConvertColor("#bd2524")),
+                                    fontSize: w / 20,
+                                  ),
+                                ),
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => RegisterPage()));
+                                },
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                )),
           ),
-          Padding(
-            padding: EdgeInsets.only(right:h/30,left: h/30,bottom: h/50),
-            child: TextField(
-              obscureText: context.read<MarkCubit>().mainMark,
-              controller: _password,
-              keyboardType: TextInputType.text,
-              decoration: InputDecoration(
-                  labelText: "Şifre",
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0))
-                  ),
-                  suffixIcon: IconButton(onPressed: (){
-                    context.read<MarkCubit>().marked("main_page");
-                  },
-                      icon: Icon(Icons.remove_red_eye_outlined,
-                      color:  context.read<MarkCubit>().mainMark ? Colors.black : Colors.red))),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(h/50),
-            child: GestureDetector(
-              onTap: (){
-              },
-              child: Text("Şifremi unuttum"
-                ,style: TextStyle(
-                  color: Color(PracticalMethod.HexaColorConvertColor(
-                      "#bd2524"))
-                  ,
-                  fontSize: w/25,
-                ),),
-            ),
-          ),
-          SizedBox(
-            height: h/12,
-            width: w/2,
-            child: Padding(
-              padding: EdgeInsets.all(h/100),
-              child: ElevatedButton(
-                  onPressed: (){
-                    /*if(_citizenshipNumber.text.isEmpty || _password.text.isEmpty){
-                      showToast("Boş alanları doldurunuz");
-                    }else if(_citizenshipNumber.text.length < 11){
-                      showToast("Vatandaşlık numarası en az 11 hane olmalıdır");
-                    }else{*/
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
-                    //}
-                  },
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(PracticalMethod.HexaColorConvertColor(
-                          "#bd2524"))
-                  ),
-                  child: Text(
-                    "Giriş Yap"
-                    ,style: TextStyle(fontSize: h/35),
-                  )),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("Kayıtlı değil misin ?"
-                  ,style: TextStyle(
-
-                    fontSize: w/25,
-                  ),),
-                SizedBox(width: 10,),
-                GestureDetector(
-                  child: Text("Kayıt Ol"
-                    ,style: TextStyle(
-                      color: Color(PracticalMethod.HexaColorConvertColor(
-                          "#bd2524"))
-                      ,
-                      fontSize: w/20,
-                    ),),
-                  onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterPage()));
-                  },
-                )
-              ],
-            ),
-          ),
-            ],
-          );
-        }),
-        ),
-      ),
-    );
+          bottomNavigationBar: Padding(
+              padding: const EdgeInsets.only(bottom: 15.0),
+              child: Observer(builder: (_) {
+                return PopupMenuButton(
+                    offset: Offset(5, 10),
+                    onOpened: () {
+                      _wholeModel.langOption(true);
+                    },
+                    onCanceled: () {
+                      _wholeModel.langOption(false);
+                    },
+                    initialValue: box.read("lang") == "tr" ? 2 : 1,
+                    elevation: 10,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "language_option".tr,
+                          textAlign: TextAlign.center,
+                        ),
+                        Icon(_wholeModel.langOptionState
+                            ? Icons.arrow_drop_up_rounded
+                            : Icons.arrow_drop_down),
+                      ],
+                    ),
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                        value: 1,
+                        child: Text("eng".tr),
+                        height: w / 10,
+                      ),
+                      PopupMenuItem(
+                        value: 2,
+                        child: Text("turkish".tr),
+                        height: w / 10,
+                      )
+                    ],
+                    onSelected: (itemValue) async {
+                      if (itemValue == 1) {
+                        _wholeModel
+                            .initialValueChanged(int.parse(itemValue.toString()));
+                        await box.write("lang", "en");
+                        Get.updateLocale(Locale("en", "US"));
+                      } else {
+                        _wholeModel
+                            .initialValueChanged(int.parse(itemValue.toString()));
+                        await box.write("lang", "tr");
+                        Get.updateLocale(Locale("tr", "TR"));
+                      }
+                    });
+              })));
+    });
   }
 }

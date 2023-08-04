@@ -1,6 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterstaj/pages/login_page.dart';
 import 'package:flutterstaj/utils/practical_method.dart';
+import 'package:get/get.dart';
+
+import 'home_page.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -17,13 +21,21 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   late AnimationController _alphaController;
   late Animation<double> _alphaAnimationValues;
 
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
   @override
   void initState() {
     // TODO: implement initState
+    _auth.authStateChanges().listen((event) {
+      if(event != null){
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomePage(),));
+        return;
+      }
+    });
     super.initState();
     Future.delayed(Duration(milliseconds: 3000),(){
-     /* Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>
-      const MainPage()));*/
+     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>
+      const LoginPage()));
     });
 
     Future.delayed(const Duration(milliseconds: 2000),(){
@@ -71,12 +83,12 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
                   padding: const EdgeInsets.all(8.0),
                   child: Opacity(
                     opacity: _alphaAnimationValues.value,
-                    child: Text("Mezun Takip Sistemi",style: TextStyle(color: Color(PracticalMethod.HexaColorConvertColor(
+                    child: Text("splash".tr,style: TextStyle(color: Color(PracticalMethod.HexaColorConvertColor(
                         "#c34240"))
                         ,
                     fontFamily: "TekturRegular",fontSize: 22),),
                   ),
-                )
+                ),
               ],
             ),
           ),

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "530610686237",
+    "project_id": "staj-a80b9",
+    "storage_bucket": "staj-a80b9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:530610686237:android:dffb895c1b94079943b9f4",
+        "android_client_info": {
+          "package_name": "com.example.flutterstaj"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "530610686237-bod4jps1jpb2j5iho90vvbb5hkcts287.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVqjtddGqcwNLzduX3xvjw_UvCggjgBRw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "530610686237-bod4jps1jpb2j5iho90vvbb5hkcts287.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
