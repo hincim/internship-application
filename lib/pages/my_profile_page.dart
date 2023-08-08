@@ -17,6 +17,21 @@ SafeArea MyProfilePage(List<LocalUsers>? user){
                   Column(
                     children: [
                       Text(
+                        "identifier_number".tr,
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          user?[0].id.toString() ?? "",
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                      Text(
                         "Email",
                         style: TextStyle(
                             color: Colors.black,

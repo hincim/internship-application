@@ -182,20 +182,37 @@ class _RegisterPageState extends State<RegisterPage> {
                       padding: EdgeInsets.all(h/80),
                       child: ElevatedButton(
                           onPressed: ()   {
+                            _registerModel.refresh(true);
                             if(_password.text != _passwordAgain.text){
                               showToast("passwords_must_be_the_same".tr);
+                              _registerModel.refresh(false);
                             }else if(_registerModel.checkBoxOne == false || _registerModel.checkBoxTwo == false){
                               showToast("check_the_boxes_to_move_forward".tr);
+                              _registerModel.refresh(false);
                             }else if(_identificationNumber.text.length<11){
                               showToast("identifier".tr);
+                              _registerModel.refresh(false);
                             }else if(_identificationNumber.text.isEmpty || _email.text.isEmpty || _phone.text.isEmpty || _password.text.isEmpty || _passwordAgain.text.isEmpty){
                               showToast("fill_in_the_blanks".tr);
+                              _registerModel.refresh(false);
                             }else{
                               _authService.createPerson(int.parse(_identificationNumber.text), _email.text, int.parse(_phone.text), _password.text).then((value){
+                                save();
                                 showToast("user_registered".tr);
                                 return Navigator.pop(context);
+                              }).catchError((dynamic error) {
+                                _registerModel.refresh(false);
+                                switch (error.code) {
+                                  case "invalid-email":
+                                    showToast("incorrect_email_account".tr);
+                                    break;
+                                  case "email-already-in-use":
+                                    showToast("email-already-in-use".tr);
+                                    break;
+                                  default:
+                                    break;
+                                }
                               });
-                              save();
                             }
                           },
                           style: ElevatedButton.styleFrom(

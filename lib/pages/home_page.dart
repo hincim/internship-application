@@ -41,7 +41,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   void initState() {
     // TODO: implement initState
     super.initState();
-    print(_auth.currentUser!.email!);
     _tabController = TabController(length: 3, vsync: this);
     _tabController.addListener(_handleTabChange);
     _wholeModel.packageInfoInit();

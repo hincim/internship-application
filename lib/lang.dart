@@ -55,7 +55,9 @@ class Lang extends Translations {
       "check_the_boxes_to_move_forward":"Check the boxes to move forward",
       "identifier":"Identifier number must be at least 11 digits",
       "user_registered":"User registered",
-      "logged_out":"Logged out"
+      "logged_out":"Logged out",
+      "identifier_number":"Identifier number",
+      "email-already-in-use":"Email already in use"
     },
     'tr_TR': {
       "phone":"Telefon",
@@ -100,7 +102,9 @@ class Lang extends Translations {
       "check_the_boxes_to_move_forward":"İlerlemek için kutucukları işaretleyiniz",
       "identifier":"Vatandaşlık numarası en az 11 hane olmalıdır",
       "user_registered":"Kullanıcı kayıt edildi",
-      "logged_out":"Çıkış yapıldı"
+      "logged_out":"Çıkış yapıldı",
+      "identifier_number":"TC NO",
+      "email-already-in-use":"Email zaten kullanılıyor"
     }
   };
 
