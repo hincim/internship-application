@@ -1,3 +1,4 @@
+/*
 
 
 import 'package:flutter/material.dart';
@@ -101,4 +102,4 @@ SafeArea InfoPage({required double h, required BuildContext context, required Wh
        ),
      ),
    );
-}
+}*/

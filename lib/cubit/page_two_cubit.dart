@@ -9,10 +9,9 @@ class PageTwoCubit extends Cubit<List<WeatherModel>>{
 
   PageTwoCubit():super(<WeatherModel>[]);
 
-  final _repo = WeatherDao(apiKey: API_KEY);
+  final _repo = WeatherDao(apiKey: Constants.API_KEY);
 
   final arr = <WeatherModel> [];
-  String img = "";
   Future<void> uploadWeather({@required String? city}) async{
     var weatherInfo = await _repo.getWeatherForLocation("${city ?? "konya"},tr");
     if(arr.isEmpty){

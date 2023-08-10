@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutterstaj/cubit/my_profile_cubit.dart';
 import 'package:flutterstaj/cubit/page_two_cubit.dart';
 import 'package:flutterstaj/mobx/whole_model.dart';
 import 'package:flutterstaj/pages/page_two.dart';
 import 'package:get/get.dart';
 import '../cloud/auth.dart';
-import '../database/dao.dart';
 import '../database/model/local_user.dart';
 import '../global_widget/toast.dart';
 import 'contact_page.dart';
@@ -45,7 +45,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     _tabController.addListener(_handleTabChange);
     _wholeModel.packageInfoInit();
     _wholeModel.refresh(true);
-    getUser();
     /*context.read<HomePageCubit>().uploadContacts()
         .catchError((value){
       _wholeModel.refresh(false);
@@ -58,6 +57,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     context.read<PageTwoCubit>().uploadWeather().whenComplete(() {
       _wholeModel.refresh(false);
     });
+    context.read<MyProfileCubit>().uploadUser(email: _auth.currentUser!.email!);
 
     animasyonKontrol = AnimationController(
         vsync: this, duration: Duration(milliseconds: 1000));
@@ -251,8 +251,5 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     } else {
       showToast("Şehir giriniz");
     }
-  }
-  void getUser() async{
-      _user = await DB.instance.getUserInfo(_auth.currentUser!.email!);
   }
 }

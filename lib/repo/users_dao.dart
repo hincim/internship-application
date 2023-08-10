@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flutterstaj/constants.dart';
 import 'package:flutterstaj/entity/users_answer.dart';
 
 import '../entity/users.dart';
@@ -15,8 +16,7 @@ class UsersDao{
 
   Future<List<Users>?> getAllUsers() async {
 
-    var url = "http://kasimadalan.pe.hu/kisiler/tum_kisiler.php";
-    var answer = await Dio().get(url);
+    var answer = await Dio().get(Constants.url);
     return parseUsersAnswer(answer.data.toString());
   }
 }

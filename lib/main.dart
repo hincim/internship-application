@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterstaj/cubit/home_page_cubit.dart';
+import 'package:flutterstaj/cubit/my_profile_cubit.dart';
 import 'package:flutterstaj/cubit/page_two_cubit.dart';
 import 'package:flutterstaj/lang.dart';
 import 'package:flutterstaj/pages/splash_screen.dart';
@@ -24,8 +24,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => HomePageCubit()),
+       /* BlocProvider(create: (context) => HomePageCubit()),*/
         BlocProvider(create: (context) => PageTwoCubit()),
+        BlocProvider(create: (context) => MyProfileCubit()),
       ],
       child: GetMaterialApp(
       translations: Lang(),

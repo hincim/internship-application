@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:flutterstaj/database/dao.dart';
+import 'package:flutterstaj/cubit/my_profile_cubit.dart';
 import 'package:flutterstaj/mobx/whole_model.dart';
 import 'package:flutterstaj/utils/practical_method.dart';
 import 'package:get/get.dart';
@@ -197,7 +198,8 @@ class _RegisterPageState extends State<RegisterPage> {
                               _registerModel.refresh(false);
                             }else{
                               _authService.createPerson(int.parse(_identificationNumber.text), _email.text, int.parse(_phone.text), _password.text).then((value){
-                                save();
+                                context.read<MyProfileCubit>().insertUser(person: LocalUsers(id: int.parse(_identificationNumber.text),
+                                    phone: int.parse(_phone.text),email: _email.text));
                                 showToast("user_registered".tr);
                                 return Navigator.pop(context);
                               }).catchError((dynamic error) {
@@ -256,10 +258,5 @@ class _RegisterPageState extends State<RegisterPage> {
         );
       }),
     );
-  }
-
-  void save() async{
-    LocalUsers user = await DB.instance.insertUser(LocalUsers(id: int.parse(_identificationNumber.text),
-    phone: int.parse(_phone.text),email: _email.text));
   }
 }

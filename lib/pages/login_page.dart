@@ -10,6 +10,8 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 import '../cloud/auth.dart';
+import '../database/dao.dart';
+import '../database/model/local_user.dart';
 import '../global_widget/toast.dart';
 
 class LoginPage extends StatefulWidget {

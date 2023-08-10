@@ -48,7 +48,7 @@ class DB {
     return person.copy(id: id);
   }
 
-  Future<List<LocalUsers>> getUserInfo(String email) async{
+  Future<List<LocalUsers>?> getUserInfo(String email) async{
 
     final db = await instance.database;
     final result = await db.query(tableNameUsers,where: "${LocalUsersTableFields.email}=?",
