@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterstaj/repo/weather_dao.dart';
-
-import '../constants.dart';
+import 'package:flutterstaj/utils/constants.dart';
 import '../entity/weather.dart';
 
 class PageTwoCubit extends Cubit<List<WeatherModel>>{

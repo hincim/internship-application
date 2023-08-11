@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:flutterstaj/constants.dart';
 import 'package:flutterstaj/entity/users_answer.dart';
+import 'package:flutterstaj/utils/constants.dart';
 
 import '../entity/users.dart';
 
